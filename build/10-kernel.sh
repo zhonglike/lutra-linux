@@ -95,6 +95,7 @@ command -v ccache >/dev/null 2>&1 && CC_WRAP="ccache gcc"
 set +e
 make ARCH="$KARCH" CROSS_COMPILE="$CROSS_COMPILE" -j"$JOBS" \
     CC="$CC_WRAP" \
+    LOCALVERSION="-lutra" \
     KDEB_PKGVERSION="${KDEB_PKGVERSION:-1.0.0-lutra1}" \
     bindeb-pkg 2>&1 | tee "$BUILD_LOG" | tail -n 40
 RC=${PIPESTATUS[0]}

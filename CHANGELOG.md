@@ -9,6 +9,7 @@
 ### 内核与构建
 
 - 自编 Linux 6.12 LTS 内核，配置采用 `base + 桌面架构 + 虚拟化` 三段碎片合并
+- 已在 QEMU 内验证 `6.12.0-lutra` 启动到 multi-user，网络与 SSH 正常
 - `build/10-kernel.sh` 支持 amd64 / arm64 / i686，产出 `bindeb-pkg` deb
 - 构建环境完全落在 M 盘：便携 QEMU + Debian trixie cloud image + cloud-init 种子盘
 - `build/20-iso.sh` 生成 Live ISO：debootstrap 根文件系统、squashfs、live-boot、GRUB 双引导

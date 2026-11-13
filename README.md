@@ -98,7 +98,7 @@ sudo ./lutra-installer.py --disk /dev/nvme0n1 --mode coexist \
 ## 里程碑
 
 - [x] **M0** 工程骨架、缓存全量重定向到 M 盘
-- [~] **M1** 自编内核 + initramfs + 最小根文件系统（构建链与配置已完成，内核编译验证中）
+- [x] **M1** 自编内核可启动：`6.12.0-lutra` 在 QEMU 内启动到 multi-user，网络与 SSH 正常（`uname -r` 已验证）
 - [x] **M2** Live ISO 构建脚本、安装器（四种模式 + 空盘/非空盘保护）
 - [x] **M3** 桌面环境：labwc + GTK4 lutra-shell + 输入法
 - [x] **M4** 智能层：Agent 运行时、权限网关、`.ltr` 包管理、审计

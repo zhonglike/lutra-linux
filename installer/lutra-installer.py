@@ -463,10 +463,10 @@ def install(argv: list[str] | None = None) -> None:
     chroot_cmd(mount, f"echo '{args.user}:{args.password}' | chpasswd", args.dry_run)
 
     if devs.get("esp"):
-        flags = " --removable" if args.mode == "usb" else ""
+        flags = " --removable --no-nvram" if args.mode == "usb" else ""
         chroot_cmd(mount,
                    f"grub-install --target=x86_64-efi --efi-directory=/boot/efi "
-                   f"--bootloader-id=Lutra{flags} --no-nvram", args.dry_run)
+                   f"--bootloader-id=Lutra{flags}", args.dry_run)
     else:
         chroot_cmd(mount, f"grub-install {disk.path}", args.dry_run)
     chroot_cmd(mount, "update-grub && update-initramfs -u -k all", args.dry_run)

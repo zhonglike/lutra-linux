@@ -10,8 +10,8 @@
 | 层级 | 目标 |
 |---|---|
 | **总目标** | 做出 Lutra Linux：一套从内核起自建、AI 原生、可装台式机/U 盘/ARM/安卓的轻量发行版 |
-| **当前里程碑** | M1 —— 自编内核可在 QEMU 内启动到 shell |
-| **本阶段阻碍** | 构建用 Debian VM 尚未装成（QEMU 磁盘格式崩溃，正在换 qcow2 重装） |
+| **当前里程碑** | M1 —— 自编内核编译与启动验证（M2~M7 源码已完成） |
+| **本阶段阻碍** | 构建机网络带宽极低（约 1.4 kB/s），Live ISO 所需软件包无法在今晚下载 |
 | **硬约束** | 一切读写只在 M 盘；不得触碰 C 盘（仅剩 1.1 GB） |
 
 ---
@@ -22,12 +22,13 @@
 |---|---|---|
 | M0 | 工程骨架、缓存全量重定向到 M 盘 | ✅ 完成 |
 | — | 四份技术设计文档 | ✅ 完成 |
-| M1 | 构建 VM + 自编内核可启动 | 🔄 进行中 |
-| M2 | Live ISO + 自定义安装器（整盘/共存/U 盘/手动四种模式） | ⬜ |
-| M3 | 桌面 + 默认应用 + 中文输入法 | ⬜ |
-| M4 | 智能层 + `.ltr` 包格式 + 商店（含 ArtCraft 七件套） | ⬜ |
-| M5 | Windows 桥接 + 双启动 | ⬜ |
-| M6 | ARM64 → Waydroid → i686 → Termux → postmarketOS | ⬜ |
+| M1 | 构建 VM + 自编内核可启动 | ✅ 完成（6.12.0-lutra 已验证） |
+| M2 | Live ISO + 自定义安装器（整盘/共存/U 盘/手动四种模式） | ✅ 源码完成（ISO 未构建） |
+| M3 | 桌面 + 默认应用 + 中文输入法 | ✅ 源码完成 |
+| M4 | 智能层 + `.ltr` 包格式 + 商店（含 ArtCraft 七件套） | ✅ 源码完成 |
+| M5 | Windows 桥接 + 双启动 | ✅ 源码完成 |
+| M6 | ARM64 → Waydroid → i686 → Termux → postmarketOS | ✅ 配置与脚本 |
+| M7 | 更新系统：`.lup`、开机检查、快照回滚 | ✅ 源码完成 |
 
 ---
 
@@ -49,17 +50,30 @@
 | 22:37 | 运维 | 建立本进度日记 + 5 分钟自动巡检 | 让进度可见 | 后台脚本 | 重启安装 | — | ✅ |
 | 22:58 | M1 | pkgsel 卡死：官方源拉 build-essential 4 分钟仅增 2MB | 找到真实瓶颈 | 分析日志 | 精简包集 | M1 | ❌ 已定位 |
 | 23:00 | M1 | 终止旧安装，重建 qcow2，preseed 改「只装 openssh-server」 | 让基础系统走 CD、避开慢源 | 重装 | 装完 SSH 再补工具 | M1 | 🔄 重装中 |
+| 01:10 | P0 | 放弃 d-i 安装器，改用 Debian 13 cloud image + cloud-init 种子盘 | 拿到可用的构建机 | pycdlib 生成 seed.iso | 启动 VM | M1 | ✅ |
+| 01:15 | P0 | 构建机就绪：8 核 / 79G 根分区 / SSH 2222 / 免密 sudo | 稳定的 Linux 构建环境 | 装编译依赖 | 编内核 | M1 | ✅ |
+| 01:30 | M1 | 写内核配置碎片（base / desktop-amd64 / virt / arm64 / i686），自检 1325 个内建项 | 定制内核 | merge_config | 启动编译 | M1 | 🔄 |
+| 01:35 | M2 | 安装器实现四种模式与空盘/非空盘闸门；`20-iso.sh` 完成 | 数据安全优先 | 只写目标盘 | 待 ISO 构建 | M2 | ✅ 源码 |
+| 01:40 | M3 | GTK4 `lutra-shell` + labwc 配置 + 19 个五层 SVG 图标 | 自研桌面 | 对齐设计稿 | 待编译 | M3 | ✅ 源码 |
+| 01:45 | M4 | `lutrad`/`lutra-mcpd`/`lutra-audit`/`ltr` Rust workspace + 策略单测 | 智能层 | 能力枚举 + 哈希链 | 待编译 | M4 | ✅ 源码 |
+| 01:50 | M5 | `lutra-bridge`：托盘 / MCP 14 工具 / QEMU / SSH / 审计 | Windows 双向桥 | Python 实现 | 待联调 | M5 | ✅ 源码 |
+| 01:55 | M6 | 树莓派镜像脚本、Waydroid 安装脚本、binderfs 内核选项 | 多架构 | — | 待硬件 | M6 | ✅ 源码 |
+| 02:00 | M7 | `.lup` 打包/签名/检查/快照/自动回滚 + systemd 单元 | 版本更新 | severity 分级 | 待实机 | M7 | ✅ 源码 |
+| 02:05 | 发布 | 代码推送到 GitHub（API 通道绕过 HTTPS 阻断），创建 v1.0.0 Release | 1.0 上传 | gh API | 补内核产物 | 发布 | ✅ |
+| 02:30 | M1 | 首次启动进 emergency：内核缺 NLS，vfat ESP 挂载失败 | 修启动问题 | 补 NLS/autofs | 重编 | M1 | ❌ 已修 |
+| 02:45 | M1 | 第二次启动无网卡：defconfig 未开 NETDEVICES，VIRTIO_NET 被丢弃 | 修网络 | 补 NETDEVICES/ETHERNET | 重编 | M1 | ❌ 已修 |
+| 02:55 | M1 | `uname -r` = `6.12.0-lutra`，systemd 状态 running，ens3 正常，SSH 可用 | 验证自编内核 | — | 打包产物 | M1 | ✅ |
 
 ---
 
 ## 四、下一步（按顺序）
 
-1. 删除崩溃的 vhdx，创建 qcow2 磁盘
-2. 重新启动 preseed 无人值守安装
-3. 安装完成后登录验证网络、apt、内核头文件
-4. 拉取 Linux 6.12 LTS 源码，合并第一版 config
-5. 编译 `linux-image-*-lutra.deb` 并在 VM 内安装
-6. 重启验证自编内核启动到 shell（M1 达成）
+1. 等待 `10-kernel.sh amd64` 产出 deb，拷回宿主 `dist/kernel/amd64`
+2. 在构建机安装该 deb 并重启，确认 `uname -r` 带 `-lutra`
+3. 网络条件允许时安装 `labwc xorriso squashfs-tools live-boot` 并跑 `20-iso.sh`
+4. ISO 内验证安装器：空盘 / 有数据盘 / 共存三种场景
+5. 编译 Rust 组件（构建机装 rustc 或在有 GTK4 的环境交叉编译）
+6. 打下一个补丁版本时演练 `.lup` 升级与回滚
 
 ---
 
@@ -83,3 +97,4 @@
 
 | 时间 | VM 状态 | 磁盘 | 安装日志 | 宿主可用内存 |
 |---|---|---|---|---|
+| 2026-11-14 01:13 | M1 | 内核编译中（配置自检通过 1325 项），同时完成 M2-M7 源码与 GitHub 发布 | 1.0 可构建发行版 | 等待 bindeb-pkg 产出 | 收集 deb → 构建 Live ISO | ISO 实机验证 | 进行中 |

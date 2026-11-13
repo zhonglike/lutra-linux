@@ -13,7 +13,7 @@
 //! tested without touching the filesystem. The executor re-checks symlinks
 //! before touching disk (see `server.rs`).
 
-use crate::{codes, tools, Capability, Danger, RpcError};
+use lutra_proto::{codes, tools, Capability, Danger, RpcError};
 use serde_json::Value;
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 use std::path::{Path, PathBuf};

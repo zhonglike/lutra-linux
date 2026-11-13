@@ -215,7 +215,9 @@ impl SessionManager {
             exp: claims.exp,
             nonce: random_hex(16),
         };
-        let new_token = self.sign_claims(&new_claims)?;
+        let new_token = self
+            .sign_claims(&new_claims)
+            .map_err(|e| RpcError::new(codes::INTERNAL_ERROR, format!("sign token: {e}")))?;
 
         let record = self
             .sessions
