@@ -1,0 +1,11 @@
+[Unit]
+Description=Lutra 更新检查
+Documentation=man:lutra-update(1)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/lutra-update check
+Nice=10
+IOSchedulingClass=idle

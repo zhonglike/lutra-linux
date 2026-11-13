@@ -1,0 +1,28 @@
+# Lutra 会话环境变量 —— labwc 启动时读取（KEY=VALUE，不做 shell 展开）。
+# 安装到 /etc/xdg/labwc/environment 或 ~/.config/labwc/environment。
+
+# 会话标识
+XDG_SESSION_TYPE=wayland
+XDG_SESSION_DESKTOP=Lutra
+XDG_CURRENT_DESKTOP=Lutra
+
+# 工具包后端：一律优先 Wayland
+GDK_BACKEND=wayland,x11
+QT_QPA_PLATFORM=wayland;xcb
+QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+SDL_VIDEODRIVER=wayland
+MOZ_ENABLE_WAYLAND=1
+ELECTRON_OZONE_PLATFORM_HINT=auto
+
+# 输入法
+GTK_IM_MODULE=fcitx
+QT_IM_MODULE=fcitx
+XMODIFIERS=@im=fcitx
+INPUT_METHOD=fcitx
+
+# 光标
+XCURSOR_THEME=Lutra
+XCURSOR_SIZE=24
+
+# lutra-shell 自带图标目录（也可用 $HOME/.local/share/lutra-shell/icons 覆盖）
+LUTRA_SHELL_ICONS=/usr/share/lutra-shell/icons

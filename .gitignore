@@ -1,0 +1,28 @@
+# 构建产物与缓存（一律不纳入版本控制）
+_cache/
+_vm/
+dist/
+_toolchains/
+
+# 内核与构建中间件
+build/linux-*/
+build/live/
+build/iso/
+build/iso-dvd/
+*.o
+*.ko
+*.a
+*.so
+
+# 节点与 Python
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+
+# 系统杂项
+Thumbs.db
+desktop.ini
+.DS_Store
+*.log
+*.tmp

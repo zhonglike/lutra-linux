@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <!-- 文档（5 层结构） -->
+  <defs>
+    <linearGradient id="base" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4e8fd0"/><stop offset="1" stop-color="#2b5f9e"/>
+    </linearGradient>
+    <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset=".55" stop-color="#000000" stop-opacity="0"/><stop offset="1" stop-color="#000000" stop-opacity=".22"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".22"/><stop offset=".62" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="46" height="46" rx="12" fill="url(#base)"/>
+  <rect x="1" y="1" width="46" height="46" rx="12" fill="url(#shade)"/>
+  <rect x="1" y="1" width="46" height="46" rx="12" fill="url(#gloss)"/>
+  <path d="M14 11h13.6L35 18.6V37a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V13a2 2 0 0 1 2-2z" fill="#eef5fc"/>
+  <path d="M27.6 11 35 18.6h-6a1.4 1.4 0 0 1-1.4-1.4z" fill="#a9c8e6"/>
+  <path d="M17 24.2h13M17 29h9.4" stroke="#7ba5cf" stroke-width="2" stroke-linecap="round"/>
+  <rect x="1.5" y="1.5" width="45" height="45" rx="11.5" fill="none" stroke="#ffffff" stroke-opacity=".2"/>
+</svg>

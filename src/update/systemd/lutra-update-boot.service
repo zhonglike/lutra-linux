@@ -1,0 +1,14 @@
+[Unit]
+Description=Lutra 更新启动计数
+DefaultDependencies=no
+After=local-fs.target
+Before=sysinit.target shutdown.target
+Conflicts=shutdown.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/lutra-update boot-tick
+RemainAfterExit=yes
+
+[Install]
+WantedBy=sysinit.target

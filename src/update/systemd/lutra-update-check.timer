@@ -1,0 +1,12 @@
+[Unit]
+Description=定期检查 Lutra 更新
+
+[Timer]
+OnBootSec=90
+OnUnitActiveSec=6h
+RandomizedDelaySec=300
+Persistent=true
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target

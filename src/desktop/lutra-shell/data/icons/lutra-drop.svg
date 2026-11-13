@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <!-- 投递窗口 / 分区（5 层结构） -->
+  <defs>
+    <linearGradient id="base" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9a7ae0"/><stop offset="1" stop-color="#5b3fb0"/>
+    </linearGradient>
+    <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset=".55" stop-color="#000000" stop-opacity="0"/><stop offset="1" stop-color="#000000" stop-opacity=".22"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".22"/><stop offset=".62" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="46" height="46" rx="12" fill="url(#base)"/>
+  <rect x="1" y="1" width="46" height="46" rx="12" fill="url(#shade)"/>
+  <rect x="1" y="1" width="46" height="46" rx="12" fill="url(#gloss)"/>
+  <rect x="13" y="13" width="22" height="22" rx="5" fill="#eee9fb"/>
+  <rect x="18" y="18" width="12" height="12" rx="2.6" fill="#7f63cf"/>
+  <path d="M13 24h22M24 13v22" stroke="#c9b9f2" stroke-width="1.4"/>
+  <rect x="1.5" y="1.5" width="45" height="45" rx="11.5" fill="none" stroke="#ffffff" stroke-opacity=".2"/>
+</svg>

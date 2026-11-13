@@ -1,0 +1,7 @@
+# Lutra Bridge 运行时依赖（均为纯 wheel，无需编译）
+paramiko>=3.4
+
+# 托盘为可选功能；缺失时 `python -m lutra_bridge tray` 会打印提示并退出，
+# 不影响 mcp / vm / exec / status。
+pystray>=0.19
+pillow>=10.0

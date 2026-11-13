@@ -1,0 +1,327 @@
+/* ==========================================================================
+   Lutra Shell — 深色主题
+   设计稿变量（GTK4 CSS 不支持 --var 自定义属性，这里用 @define-color 一一对应）：
+     --desk:#1a1a1a   --win:#242424   --hdr:#2b2b2b
+     --side:#2f2f2f   --sel:#3584e4   --term:#161616
+   ========================================================================== */
+
+@define-color desk #1a1a1a;
+@define-color win #242424;
+@define-color hdr #2b2b2b;
+@define-color side #2f2f2f;
+@define-color sel #3584e4;
+@define-color term #161616;
+@define-color t1 #ffffff;
+@define-color t2 #c2c2c2;
+@define-color t3 #8b8b8b;
+
+window {
+  font-family: "Cantarell", "Noto Sans CJK SC", "Noto Sans", sans-serif;
+  font-size: 13px;
+  color: @t1;
+}
+
+/* ------------------------------ 顶栏 ------------------------------------ */
+
+window.lutra-panel {
+  background-color: #1e1e1e;
+  background-image: none;
+  border-bottom: 1px solid #000000;
+  color: @t2;
+  font-size: 12px;
+}
+
+.panel {
+  min-height: 30px;
+}
+
+.panel-title {
+  color: @t3;
+  font-size: 12px;
+}
+
+.panel-separator {
+  min-width: 1px;
+  background-color: rgba(255, 255, 255, 0.13);
+}
+
+button.start-button {
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 4px;
+  padding: 2px 9px 2px 7px;
+  min-width: 0;
+  min-height: 0;
+}
+
+button.start-button:hover {
+  background-color: rgba(255, 255, 255, 0.09);
+}
+
+button.start-button:active {
+  background-color: rgba(255, 255, 255, 0.13);
+}
+
+.start-button-label {
+  color: @t1;
+  font-size: 12px;
+}
+
+/* 工作区 */
+button.workspace {
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 3px;
+  min-width: 18px;
+  min-height: 18px;
+  padding: 0 4px;
+  color: @t3;
+  font-size: 11px;
+}
+
+button.workspace:hover {
+  background-color: rgba(255, 255, 255, 0.09);
+  color: @t1;
+}
+
+button.workspace.active {
+  background-color: rgba(53, 132, 228, 0.26);
+  color: @t1;
+}
+
+/* 任务栏 */
+button.task-button {
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 6px;
+  min-width: 22px;
+  min-height: 22px;
+  padding: 0;
+  transition: background-color 150ms ease;
+}
+
+button.task-button:hover {
+  background-color: rgba(255, 255, 255, 0.09);
+}
+
+button.task-button.active {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+/* 运行指示点：5x5 圆点，位于按钮正下方（布局由 taskbar.rs 保证居中） */
+.task-dot {
+  min-width: 5px;
+  min-height: 5px;
+  border-radius: 3px;
+  background-color: transparent;
+}
+
+.task-dot.running {
+  background-color: #b8b8b8;
+}
+
+.task-dot.active {
+  background-color: @sel;
+}
+
+/* 系统区 */
+button.tray-button {
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 4px;
+  min-width: 0;
+  min-height: 0;
+  padding: 1px 3px;
+}
+
+button.tray-button:hover {
+  background-color: rgba(255, 255, 255, 0.09);
+}
+
+.tray-clock {
+  color: @t1;
+  font-size: 11.5px;
+  font-feature-settings: "tnum";
+}
+
+.tray-battery {
+  color: @t2;
+  font-size: 11px;
+  font-feature-settings: "tnum";
+}
+
+.ai-label {
+  color: @t2;
+  font-size: 11px;
+}
+
+.ai-dot {
+  min-width: 6px;
+  min-height: 6px;
+  border-radius: 3px;
+  background-color: @t3;
+}
+
+.ai-dot.online {
+  background-color: #2ec27e;
+}
+
+/* ---------------------------- 开始菜单 ---------------------------------- */
+
+window.lutra-start-menu {
+  background-color: transparent;
+  background-image: none;
+}
+
+.start-menu {
+  /* 8px 外边距给阴影留绘制空间，窗口定位时用同样的偏移量抵消 */
+  margin: 8px;
+  background-color: #262626;
+  border: 1px solid #000000;
+  border-radius: 9px;
+  padding: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
+}
+
+.start-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: @t1;
+}
+
+.start-version {
+  font-size: 11px;
+  color: @t3;
+}
+
+.start-search {
+  background-color: #1c1c1c;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 5px;
+  padding: 7px 10px;
+}
+
+entry.start-entry {
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  min-height: 0;
+  color: @t1;
+  caret-color: @t1;
+  font-size: 12.5px;
+}
+
+.start-scroll {
+  background-color: transparent;
+}
+
+.start-list {
+  padding: 0;
+}
+
+.start-category {
+  font-size: 11px;
+  font-weight: 600;
+  color: @t3;
+  margin-top: 4px;
+}
+
+.start-empty {
+  color: @t3;
+  font-size: 12px;
+  padding: 18px 6px;
+}
+
+flowbox.start-grid {
+  background-color: transparent;
+}
+
+flowboxchild {
+  padding: 0;
+  background-color: transparent;
+}
+
+button.start-app {
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 6px;
+  padding: 10px 4px;
+  min-width: 0;
+}
+
+button.start-app:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.start-app-label {
+  font-size: 11.5px;
+  color: @t2;
+}
+
+button.start-app:hover .start-app-label {
+  color: @t1;
+}
+
+.start-foot {
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  padding-top: 12px;
+}
+
+.start-user {
+  font-size: 12px;
+  color: @t2;
+}
+
+.start-avatar {
+  min-width: 24px;
+  min-height: 24px;
+  border-radius: 12px;
+  background-image: linear-gradient(145deg, #3fa5a3, #16585a);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+button.start-power {
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 5px;
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0;
+}
+
+button.start-power:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 滚动条 */
+scrollbar {
+  background-color: transparent;
+  border: none;
+}
+
+scrollbar slider {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 5px;
+  min-width: 6px;
+  min-height: 20px;
+}
+
+scrollbar slider:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}

@@ -1,0 +1,11 @@
+[Unit]
+Description=标记 Lutra 更新启动成功
+After=graphical.target
+Requires=graphical.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/lutra-update mark-success
+
+[Install]
+WantedBy=graphical.target

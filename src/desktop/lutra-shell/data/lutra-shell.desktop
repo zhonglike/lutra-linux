@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Lutra Shell
+Name[zh_CN]=Lutra 桌面外壳
+GenericName=Desktop Shell
+Comment=Lutra 的顶栏、开始菜单与任务栏
+Comment[zh_CN]=Lutra 的顶栏、开始菜单与任务栏
+Exec=lutra-shell
+Icon=/usr/share/lutra-shell/icons/lutra-brand.svg
+Terminal=false
+Categories=System;DesktopSettings;
+OnlyShowIn=Lutra;
+NoDisplay=true
+StartupNotify=false
+X-GNOME-Autostart-enabled=true

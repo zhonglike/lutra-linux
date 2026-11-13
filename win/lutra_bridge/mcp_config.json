@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "lutra": {
+      "command": "python",
+      "args": ["-m", "lutra_bridge", "mcp", "--stdio", "--profile", "default"],
+      "env": {
+        "PYTHONPATH": "M:\\lutraos\\win",
+        "LUTRA_HOME": "M:\\lutraos",
+        "LUTRA_BRIDGE_POLICY": "ask"
+      }
+    }
+  }
+}

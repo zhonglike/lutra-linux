@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Lutra · labwc 配置
+     安装到 /etc/xdg/labwc/rc.xml（系统默认）或 ~/.config/labwc/rc.xml（用户覆盖）。
+     主题与字体尽量贴近 design/desktop-mockup.html：深色、7px 圆角、Cantarell + Noto Sans CJK。 -->
+<openbox_config xmlns="http://openbox.org/3.4/rc">
+
+  <placement>
+    <policy>automatic</policy>
+    <center>
+      <force>no</force>
+    </center>
+  </placement>
+
+  <theme>
+    <name>Clearlooks</name>
+    <cornerRadius>7</cornerRadius>
+    <font place="ActiveWindow">
+      <name>Noto Sans CJK SC</name>
+      <size>10</size>
+      <weight>bold</weight>
+    </font>
+    <font place="InactiveWindow">
+      <name>Noto Sans CJK SC</name>
+      <size>10</size>
+      <weight>normal</weight>
+    </font>
+    <font place="MenuHeader">
+      <name>Noto Sans CJK SC</name>
+      <size>10</size>
+      <weight>normal</weight>
+    </font>
+    <font place="MenuItem">
+      <name>Noto Sans CJK SC</name>
+      <size>10</size>
+      <weight>normal</weight>
+    </font>
+    <titlebar>
+      <layout>icon:title:minimize:maximize:close</layout>
+    </titlebar>
+  </theme>
+
+  <!-- 工作区数量与 lutra-shell 顶栏的 1..4 指示保持一致 -->
+  <desktops>
+    <number>4</number>
+    <names>
+      <name>1</name>
+      <name>2</name>
+      <name>3</name>
+      <name>4</name>
+    </names>
+  </desktops>
+
+  <focus>
+    <followMouse>no</followMouse>
+    <raiseOnFocus>yes</raiseOnFocus>
+  </focus>
+
+  <keyboard>
+    <default />
+
+    <!-- 终端 / 启动器 / 文件 / 截图 -->
+    <keybind key="W-Return">
+      <action name="Execute">
+        <command>foot</command>
+      </action>
+    </keybind>
+    <keybind key="W-d">
+      <action name="Execute">
+        <command>fuzzel</command>
+      </action>
+    </keybind>
+    <keybind key="W-e">
+      <action name="Execute">
+        <command>pcmanfm-qt</command>
+      </action>
+    </keybind>
+    <keybind key="W-s">
+      <action name="Execute">
+        <command>lutra-shot</command>
+      </action>
+    </keybind>
+
+    <!-- 窗口操作 -->
+    <keybind key="W-q">
+      <action name="Close" />
+    </keybind>
+    <keybind key="W-Tab">
+      <action name="NextWindow" />
+    </keybind>
+    <keybind key="A-Tab">
+      <action name="NextWindow" />
+    </keybind>
+    <keybind key="W-f">
+      <action name="ToggleMaximize" />
+    </keybind>
+    <keybind key="W-S-f">
+      <action name="ToggleFullscreen" />
+    </keybind>
+
+    <!-- 工作区：GoToDesktop 是唯一可靠的工作区切换方式
+         （labwc 未提供 shell 可调用的 IPC，顶栏只做指示） -->
+    <keybind key="W-1"><action name="GoToDesktop"><to>1</to></action></keybind>
+    <keybind key="W-2"><action name="GoToDesktop"><to>2</to></action></keybind>
+    <keybind key="W-3"><action name="GoToDesktop"><to>3</to></action></keybind>
+    <keybind key="W-4"><action name="GoToDesktop"><to>4</to></action></keybind>
+    <keybind key="W-S-1"><action name="SendToDesktop"><to>1</to><follow>yes</follow></action></keybind>
+    <keybind key="W-S-2"><action name="SendToDesktop"><to>2</to><follow>yes</follow></action></keybind>
+    <keybind key="W-S-3"><action name="SendToDesktop"><to>3</to><follow>yes</follow></action></keybind>
+    <keybind key="W-S-4"><action name="SendToDesktop"><to>4</to><follow>yes</follow></action></keybind>
+
+    <!-- 音量走 PipeWire（PipeWire 自带 wpctl） -->
+    <keybind key="XF86AudioRaiseVolume">
+      <action name="Execute">
+        <command>wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+</command>
+      </action>
+    </keybind>
+    <keybind key="XF86AudioLowerVolume">
+      <action name="Execute">
+        <command>wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-</command>
+      </action>
+    </keybind>
+    <keybind key="XF86AudioMute">
+      <action name="Execute">
+        <command>wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle</command>
+      </action>
+    </keybind>
+  </keyboard>
+
+  <mouse>
+    <default />
+  </mouse>
+
+  <window>
+    <titleLayout>icon:title:minimize:maximize:close</titleLayout>
+  </window>
+
+  <menu>
+    <ignore>no</ignore>
+  </menu>
+
+</openbox_config>

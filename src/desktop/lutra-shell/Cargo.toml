@@ -1,0 +1,14 @@
+[package]
+name = "lutra-shell"
+version = "1.0.0"
+edition = "2021"
+description = "Lutra 桌面外壳：顶栏、开始菜单与任务栏"
+license = "MIT"
+
+[dependencies]
+# GTK4 绑定。v4_12 用于 CssProvider::load_from_string（Lutra 基础镜像为 GTK 4.18）
+gtk4 = { version = "0.9", features = ["v4_12"] }
+
+# Wayland layer-shell（顶栏/弹层需要置顶与排他区）。
+# 用范围约束让 cargo 自动挑选与 gtk4 0.9 匹配的那一版绑定。
+gtk4-layer-shell = ">=0.4, <0.9"

@@ -1,0 +1,5 @@
+#!/bin/bash
+# lutra-update —— 系统更新命令入口
+set -euo pipefail
+export PYTHONPATH="/usr/lib/lutra/update${PYTHONPATH:+:$PYTHONPATH}"
+exec python3 -m lutra_update "$@"

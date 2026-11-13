@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <!-- 计算器（5 层结构） -->
+  <defs>
+    <linearGradient id="base" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fa8b62"/><stop offset="1" stop-color="#be3f26"/>
+    </linearGradient>
+    <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset=".55" stop-color="#000000" stop-opacity="0"/><stop offset="1" stop-color="#000000" stop-opacity=".22"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".22"/><stop offset=".62" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="46" height="46" rx="12" fill="url(#base)"/>
+  <rect x="1" y="1" width="46" height="46" rx="12" fill="url(#shade)"/>
+  <rect x="1" y="1" width="46" height="46" rx="12" fill="url(#gloss)"/>
+  <rect x="12" y="10.5" width="24" height="9.4" rx="2.6" fill="#4a1409" opacity=".62"/>
+  <rect x="12" y="23.2" width="6.6" height="5.6" rx="1.7" fill="#ffffff"/>
+  <rect x="20.7" y="23.2" width="6.6" height="5.6" rx="1.7" fill="#ffffff"/>
+  <rect x="29.4" y="23.2" width="6.6" height="5.6" rx="1.7" fill="#ffffff"/>
+  <rect x="12" y="31.6" width="6.6" height="5.6" rx="1.7" fill="#ffffff" opacity=".82"/>
+  <rect x="20.7" y="31.6" width="6.6" height="5.6" rx="1.7" fill="#ffffff" opacity=".82"/>
+  <rect x="29.4" y="31.6" width="6.6" height="5.6" rx="1.7" fill="#ffe6a8"/>
+  <rect x="1.5" y="1.5" width="45" height="45" rx="11.5" fill="none" stroke="#ffffff" stroke-opacity=".2"/>
+</svg>

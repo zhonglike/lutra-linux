@@ -1,0 +1,24 @@
+#!/bin/sh
+# Lutra 会话启动脚本 —— labwc 就绪后执行。
+# 安装到 /etc/xdg/labwc/autostart 或 ~/.config/labwc/autostart，并 chmod +x。
+
+# 输入法：中文默认（fcitx5 + rime）
+fcitx5 -d --replace
+
+# 通知守护：权限确认等交互由 mako 承载按钮
+mako &
+
+# 音频：优先交给 systemd 用户服务；容器/无 systemd 环境下回退为直接拉起
+if ! systemctl --user start pipewire.service pipewire-pulse.service wireplumber.service 2>/dev/null; then
+    pipewire &
+    pipewire-pulse &
+    wireplumber &
+fi
+
+# 桌面外壳：顶栏 + 开始菜单 + 任务栏（layer-shell）
+lutra-shell &
+
+# 壁纸（swaybg 是文档指定的壁纸组件）
+if command -v swaybg >/dev/null 2>&1 && [ -f /usr/share/lutra/wallpaper/lutra-default.png ]; then
+    swaybg -m fill -i /usr/share/lutra/wallpaper/lutra-default.png &
+fi

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <!-- 浏览器（5 层结构） -->
+  <defs>
+    <linearGradient id="base" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4cbdee"/><stop offset="1" stop-color="#0e5199"/>
+    </linearGradient>
+    <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset=".55" stop-color="#000000" stop-opacity="0"/><stop offset="1" stop-color="#000000" stop-opacity=".22"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".22"/><stop offset=".62" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="46" height="46" rx="12" fill="url(#base)"/>
+  <rect x="1" y="1" width="46" height="46" rx="12" fill="url(#shade)"/>
+  <rect x="1" y="1" width="46" height="46" rx="12" fill="url(#gloss)"/>
+  <circle cx="24" cy="25" r="12.6" fill="#000000" opacity=".18" transform="translate(0,1.2)"/>
+  <circle cx="24" cy="24" r="12.6" fill="#eef8fe"/>
+  <path d="M11.4 24h25.2M24 11.4c4.7 3.4 7.1 7.8 7.1 12.6s-2.4 9.2-7.1 12.6c-4.7-3.4-7.1-7.8-7.1-12.6s2.4-9.2 7.1-12.6z" fill="none" stroke="#3f97cc" stroke-width="1.8"/>
+  <rect x="1.5" y="1.5" width="45" height="45" rx="11.5" fill="none" stroke="#ffffff" stroke-opacity=".2"/>
+</svg>
