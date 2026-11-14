@@ -19,7 +19,7 @@ use gtk4::{
     Application, Box as GtkBox, Button, Entry, FlowBox, Label, Orientation, PolicyType,
     ScrolledWindow, SelectionMode, Window,
 };
-use gtk4_layer_shell::{Edge, KeyboardInteractivity, Layer, LayerShell};
+use gtk4_layer_shell::{Edge, KeyboardMode, Layer, LayerShell};
 
 use crate::theme;
 
@@ -203,7 +203,7 @@ impl StartMenu {
         window.set_margin(Edge::Top, top_offset);
         window.set_margin(Edge::Left, 2);
         window.set_exclusive_zone(0);
-        window.set_keyboard_interactivity(KeyboardInteractivity::None);
+        window.set_keyboard_mode(KeyboardMode::None);
         window.set_visible(false);
 
         let visible = Rc::new(Cell::new(false));
@@ -270,7 +270,7 @@ impl StartMenu {
         }
         // 弹层需要键盘焦点才能输入搜索词，只在可见期间独占键盘。
         self.window
-            .set_keyboard_interactivity(KeyboardInteractivity::Exclusive);
+            .set_keyboard_mode(KeyboardMode::Exclusive);
         self.window.present();
         self.entry.grab_focus();
         self.visible.set(true);
@@ -279,7 +279,7 @@ impl StartMenu {
     pub fn hide(&self) {
         self.window.set_visible(false);
         self.window
-            .set_keyboard_interactivity(KeyboardInteractivity::None);
+            .set_keyboard_mode(KeyboardMode::None);
         self.visible.set(false);
     }
 

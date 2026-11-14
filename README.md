@@ -103,11 +103,11 @@ sudo ./lutra-installer.py --disk /dev/nvme0n1 --mode coexist \
 - [x] **M0** 工程骨架、缓存全量重定向到 M 盘
 - [x] **M1** 自编内核可启动：`6.12.0-lutra` 在 QEMU 内启动到 multi-user，网络与 SSH 正常（`uname -r` 已验证）
 - [x] **M2** Live ISO 已构建并实测：可启动到登录；安装器空盘/非空盘分类与拒绝逻辑验证通过
-- [x] **M3** 桌面环境：labwc + GTK4 lutra-shell + 输入法
+- [x] **M3** 桌面环境：labwc + GTK4 lutra-shell（已在构建机编译并在 Live 中验证）
 - [x] **M4** 智能层：Agent 运行时、权限网关、`.ltr` 包管理、审计
 - [x] **M5** Windows 桥接：`lutra-bridge`（托盘 + MCP Server + 便携 QEMU + 文件投递）
 - [x] **M6** 多架构：ARM64 配置与树莓派镜像脚本、i686 配置、Waydroid
-- [x] **M7** 系统更新：`.lup` 升级包、开机检查、安全更新强提示、快照回滚
+- [x] **M7** 系统更新：`.lup` 升级包、开机检查、安全更新强提示、快照回滚（已演练闭环）
 
 ## 构建环境约束
 

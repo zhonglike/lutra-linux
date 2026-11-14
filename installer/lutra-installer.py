@@ -31,6 +31,8 @@ ESP_SIZE_MIB = 1024
 SWAP_SIZE_MIB = 4096
 MIN_ROOT_GIB = 20
 BTRFS_SUBVOLS = ("@", "@home", "@snapshots", "@var")
+# 子卷 -> 挂载点（必须与 fstab 一致）
+SUBVOL_MOUNT = {"@": "", "@home": "home", "@snapshots": ".snapshots", "@var": "var"}
 
 
 # ---------------------------------------------------------------- 基础工具
@@ -448,7 +450,7 @@ def install(argv: list[str] | None = None) -> None:
     run(["umount", mount], dry=args.dry_run, check=False)
     run(["mount", "-o", "subvol=@", devs["root"], mount], dry=args.dry_run)
     for sub in BTRFS_SUBVOLS[1:]:
-        d = os.path.join(mount, sub.lstrip("@"))
+        d = os.path.join(mount, SUBVOL_MOUNT[sub])
         run(["mkdir", "-p", d], dry=args.dry_run)
         run(["mount", "-o", f"subvol={sub}", devs["root"], d], dry=args.dry_run)
 
@@ -459,14 +461,32 @@ def install(argv: list[str] | None = None) -> None:
     extract_rootfs(mount, args.rootfs, args.dry_run)
     write_fstab(mount, devs, args.dry_run)
 
-    chroot_cmd(mount, f"hostnamectl set-hostname {args.hostname}", args.dry_run)
+    # chroot 前挂载内核伪文件系统，否则 grub-install / update-grub / update-initramfs 会失败
+    for sub in ("dev", "dev/pts", "proc", "sys"):
+        target = os.path.join(mount, sub)
+        run(["mkdir", "-p", target], dry=args.dry_run, check=False)
+        run(["mount", "--bind", f"/{sub}", target], dry=args.dry_run, check=False)
+
+    # 主机名直接写文件（chroot 里没有运行的 systemd，hostnamectl 会失败）
+    if not args.dry_run:
+        with open(os.path.join(mount, "etc/hostname"), "w", encoding="utf-8") as fh:
+            fh.write(args.hostname + "\n")
+        hosts_path = os.path.join(mount, "etc/hosts")
+        try:
+            hosts = open(hosts_path, encoding="utf-8").read()
+        except OSError:
+            hosts = "127.0.0.1 localhost\n"
+        if f" {args.hostname}" not in hosts:
+            hosts = hosts.rstrip("\n") + f"\n127.0.1.1 {args.hostname}\n"
+            with open(hosts_path, "w", encoding="utf-8") as fh:
+                fh.write(hosts)
     chroot_cmd(mount, f"ln -sf /usr/share/zoneinfo/{args.timezone} /etc/localtime", args.dry_run)
-    chroot_cmd(mount, f"sed -i 's/^#\\?{args.locale}/{args.locale}/' /etc/locale.gen && locale-gen", args.dry_run)
+    chroot_cmd(mount, f"sed -i 's/^#\\?{args.locale}/{args.locale}/' /etc/locale.gen; locale-gen || true", args.dry_run)
     chroot_cmd(mount, f"id {args.user} >/dev/null 2>&1 || useradd -m -G sudo,audio,video,input -s /bin/bash {args.user}", args.dry_run)
     chroot_cmd(mount, f"echo '{args.user}:{args.password}' | chpasswd", args.dry_run)
 
     if devs.get("esp"):
-        flags = " --removable --no-nvram" if args.mode == "usb" else ""
+        flags = " --removable"
         chroot_cmd(mount,
                    f"grub-install --target=x86_64-efi --efi-directory=/boot/efi "
                    f"--bootloader-id=Lutra{flags}", args.dry_run)
@@ -475,6 +495,9 @@ def install(argv: list[str] | None = None) -> None:
     chroot_cmd(mount, "update-grub && update-initramfs -u -k all", args.dry_run)
     chroot_cmd(mount, "btrfs subvolume snapshot -r / /.snapshots/first-boot", args.dry_run)
 
+    # 卸载 chroot 的 bind 挂载，再整体卸载
+    for sub in ("dev/pts", "dev", "proc", "sys"):
+        run(["umount", "-lf", os.path.join(mount, sub)], dry=args.dry_run, check=False)
     run(["sync"], dry=args.dry_run)
     run(["umount", "-R", mount], dry=args.dry_run, check=False)
     info("安装完成。请取出安装介质并重启。")
@@ -493,7 +516,7 @@ def do_manual(args: argparse.Namespace) -> None:
     run(["umount", mount], dry=args.dry_run, check=False)
     run(["mount", "-o", "subvol=@", args.root_part, mount], dry=args.dry_run)
     for sub in BTRFS_SUBVOLS[1:]:
-        d = os.path.join(mount, sub.lstrip("@"))
+        d = os.path.join(mount, SUBVOL_MOUNT[sub])
         run(["mkdir", "-p", d], dry=args.dry_run)
         run(["mount", "-o", f"subvol={sub}", args.root_part, d], dry=args.dry_run)
     if args.esp_part:

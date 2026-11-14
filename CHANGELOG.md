@@ -20,13 +20,14 @@
 - `installer/lutra-installer.py` 支持四种模式：整盘、与 Windows 共存、U 盘、手动分区
 - 新增 GTK4 图形向导 `installer/lutra-installer-gui.py`，复用同一套分区安全逻辑
 - Live 桌面提供 waybar 顶栏与「安装」入口，图形向导可直接选择磁盘、模式并安装
+- 已用 24G 空盘完成一次 UEFI 真装并冷启动验证：GRUB、内核、hostname、首启快照、用户均正常
 - 写入前对目标磁盘分类（空盘 / 有数据 / 含系统），非空盘必须 `--force-nonempty` 并输入磁盘路径确认
 - 共存模式**只使用未分配空间**，绝不缩容现有分区
 - Btrfs 子卷 `@`、`@home`、`@snapshots`、`@var`，首启自动快照
 
 ### 桌面
 
-- labwc 合成器 + 自研 GTK4 `lutra-shell`：顶栏、任务栏、开始菜单
+- labwc 合成器 + 自研 GTK4 `lutra-shell`：顶栏、任务栏、开始菜单（已在构建机编译并验证）
 - 深色 Adwaita 风格，5 层结构彩色图标，6 层圆形水獭标志
 - 默认中文输入法 fcitx5 + rime
 

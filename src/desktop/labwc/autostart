@@ -23,9 +23,13 @@ if command -v swaybg >/dev/null 2>&1; then
     fi
 fi
 
-# 顶栏：lutra-shell 尚未编译时用 waybar 兜底
+# 顶栏：优先自研 lutra-shell；启动失败时回退 waybar
 if command -v lutra-shell >/dev/null 2>&1; then
     lutra-shell &
+    sleep 2
+    if ! pgrep -x lutra-shell >/dev/null 2>&1; then
+        command -v waybar >/dev/null 2>&1 && waybar &
+    fi
 elif command -v waybar >/dev/null 2>&1; then
     waybar &
 fi

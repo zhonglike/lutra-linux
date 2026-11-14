@@ -7,7 +7,7 @@ use gtk4::prelude::*;
 use gtk4::{
     glib, Align, Application, Box as GtkBox, Button, Label, Orientation, Separator, Window,
 };
-use gtk4_layer_shell::{Edge, KeyboardInteractivity, Layer, LayerShell};
+use gtk4_layer_shell::{Edge, KeyboardMode, Layer, LayerShell};
 
 use crate::clock;
 use crate::startmenu::{spawn_command, StartMenu};
@@ -73,7 +73,7 @@ pub fn build(app: &Application) {
     window.set_anchor(Edge::Right, true);
     window.set_exclusive_zone(PANEL_HEIGHT);
     // 顶栏本身不接收键盘，键盘输入交给开始菜单的搜索框。
-    window.set_keyboard_interactivity(KeyboardInteractivity::None);
+    window.set_keyboard_mode(KeyboardMode::None);
     window.present();
 }
 

@@ -66,14 +66,14 @@ mount_chroot
 PKGS=(
     systemd-sysv dbus sudo locales tzdata console-setup keyboard-configuration
     network-manager netbase iproute2 iputils-ping curl wget ca-certificates gnupg
-    labwc wayland-utils xwayland seatd waybar foot pcmanfm
+    labwc wayland-utils xwayland seatd waybar foot pcmanfm libgtk4-layer-shell0
     libgtk-4-1 libgtk-4-bin libglib2.0-bin adwaita-icon-theme fonts-noto-cjk fonts-dejavu-core
     fuzzel mako-notifier wl-clipboard grim slurp swaybg
     pipewire pipewire-pulse wireplumber alsa-utils
     fcitx5 fcitx5-chinese-addons fcitx5-rime
     btrfs-progs e2fsprogs dosfstools parted gdisk util-linux
     squashfs-tools live-boot live-config live-config-systemd
-    grub-common grub2-common os-prober efibootmgr
+    grub-common grub2-common grub-efi-amd64 os-prober efibootmgr
     openssh-server python3 python3-cryptography python3-yaml python3-gi gir1.2-gtk-4.0
     less nano vim-tiny rsync zstd xz-utils psmisc
     zram-tools earlyoom
@@ -162,6 +162,15 @@ if [ -d "$LUTRA_ROOT/src/desktop/waybar" ]; then
     install -m 644 "$LUTRA_ROOT/src/desktop/waybar/style.css" "$ROOTFS/etc/xdg/waybar/style.css"
 fi
 
+# 自研桌面外壳（已编译时优先使用）
+if [ -x "$LUTRA_ROOT/dist/lutra-shell/lutra-shell" ]; then
+    install -Dm755 "$LUTRA_ROOT/dist/lutra-shell/lutra-shell" "$ROOTFS/usr/bin/lutra-shell"
+    install -d "$ROOTFS/usr/share/lutra-shell"
+    cp -a "$LUTRA_ROOT/dist/lutra-shell/icons" "$ROOTFS/usr/share/lutra-shell/" 2>/dev/null || true
+    install -m644 "$LUTRA_ROOT/src/desktop/lutra-shell/data/lutra-shell.desktop" \
+        "$ROOTFS/usr/share/applications/lutra-shell.desktop" 2>/dev/null || true
+fi
+
 # Live 环境允许密码登录（仅体验用途，用户 lutra/lutra）
 sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication yes/' "$ROOTFS/etc/ssh/sshd_config" 2>/dev/null || true
 grep -q '^PasswordAuthentication yes' "$ROOTFS/etc/ssh/sshd_config" 2>/dev/null || \
@@ -180,6 +189,12 @@ LIVE_LOCALES="zh_CN.UTF-8 en_US.UTF-8"
 LIVE_TIMEZONE="Asia/Shanghai"
 LIVE_KEYBOARD_LAYOUTS="us"
 EOF
+
+# 强制把 VMware / VirtualBox 显卡驱动打进 initramfs，避免虚拟机里黑屏
+mkdir -p "$ROOTFS/etc/initramfs-tools"
+for m in vmwgfx bochs-drm; do
+    grep -qx "$m" "$ROOTFS/etc/initramfs-tools/modules" 2>/dev/null || echo "$m" >> "$ROOTFS/etc/initramfs-tools/modules"
+done
 
 chroot "$ROOTFS" /bin/bash -c "update-initramfs -u -k all" 2>&1 | tail -n 3
 
