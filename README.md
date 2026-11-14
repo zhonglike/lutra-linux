@@ -86,6 +86,9 @@ sudo ./build/20-iso.sh amd64
 # 先看磁盘分类，空盘/有数据/含系统一目了然
 sudo ./lutra-installer.py --list
 
+# 图形向导（Live 桌面顶栏「安装」按钮，或直接运行）
+sudo ./lutra-installer-gui.py
+
 # 整盘安装（非空盘会拒绝，除非显式 --force-nonempty）
 sudo ./lutra-installer.py --disk /dev/nvme0n1 --mode erase \
      --rootfs /run/lutra/rootfs.tar.zst

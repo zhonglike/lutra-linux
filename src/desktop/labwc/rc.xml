@@ -71,7 +71,7 @@
     </keybind>
     <keybind key="W-e">
       <action name="Execute">
-        <command>pcmanfm-qt</command>
+        <command>pcmanfm</command>
       </action>
     </keybind>
     <keybind key="W-s">

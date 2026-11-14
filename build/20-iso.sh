@@ -66,7 +66,7 @@ mount_chroot
 PKGS=(
     systemd-sysv dbus sudo locales tzdata console-setup keyboard-configuration
     network-manager netbase iproute2 iputils-ping curl wget ca-certificates gnupg
-    labwc wayland-utils xwayland seatd
+    labwc wayland-utils xwayland seatd waybar foot pcmanfm
     libgtk-4-1 libgtk-4-bin libglib2.0-bin adwaita-icon-theme fonts-noto-cjk fonts-dejavu-core
     fuzzel mako-notifier wl-clipboard grim slurp swaybg
     pipewire pipewire-pulse wireplumber alsa-utils
@@ -74,7 +74,7 @@ PKGS=(
     btrfs-progs e2fsprogs dosfstools parted gdisk util-linux
     squashfs-tools live-boot live-config live-config-systemd
     grub-common grub2-common os-prober efibootmgr
-    openssh-server python3 python3-cryptography python3-yaml
+    openssh-server python3 python3-cryptography python3-yaml python3-gi gir1.2-gtk-4.0
     less nano vim-tiny rsync zstd xz-utils psmisc
     zram-tools earlyoom
 )
@@ -136,17 +136,36 @@ chroot "$ROOTFS" chown lutra:lutra /home/lutra/.bash_profile
 # 安装器与桌面入口
 install -d "$ROOTFS/opt/lutra"
 cp "$LUTRA_ROOT/installer/lutra-installer.py" "$ROOTFS/opt/lutra/"
+cp "$LUTRA_ROOT/installer/lutra-installer-gui.py" "$ROOTFS/opt/lutra/" 2>/dev/null || true
 chmod 755 "$ROOTFS/opt/lutra/lutra-installer.py"
+[ -f "$ROOTFS/opt/lutra/lutra-installer-gui.py" ] && chmod 755 "$ROOTFS/opt/lutra/lutra-installer-gui.py"
 cat > "$ROOTFS/usr/share/applications/lutra-installer.desktop" <<'EOF'
 [Desktop Entry]
 Type=Application
 Name=安装 Lutra
-Comment=将 Lutra 安装到磁盘
-Exec=sudo -E /opt/lutra/lutra-installer.py
+Comment=将 Lutra 安装到磁盘（图形向导）
+Exec=sudo -E /opt/lutra/lutra-installer-gui.py
 Icon=drive-harddisk
-Terminal=true
+Terminal=false
 Categories=System;
 EOF
+
+# 桌面配置：labwc + waybar（lutra-shell 未编译时的可用兜底）
+install -d "$ROOTFS/etc/xdg/labwc" "$ROOTFS/etc/xdg/waybar"
+if [ -d "$LUTRA_ROOT/src/desktop/labwc" ]; then
+    install -m 644 "$LUTRA_ROOT/src/desktop/labwc/rc.xml" "$ROOTFS/etc/xdg/labwc/rc.xml"
+    install -m 755 "$LUTRA_ROOT/src/desktop/labwc/autostart" "$ROOTFS/etc/xdg/labwc/autostart"
+    install -m 644 "$LUTRA_ROOT/src/desktop/labwc/environment" "$ROOTFS/etc/xdg/labwc/environment"
+fi
+if [ -d "$LUTRA_ROOT/src/desktop/waybar" ]; then
+    install -m 644 "$LUTRA_ROOT/src/desktop/waybar/config.jsonc" "$ROOTFS/etc/xdg/waybar/config.jsonc"
+    install -m 644 "$LUTRA_ROOT/src/desktop/waybar/style.css" "$ROOTFS/etc/xdg/waybar/style.css"
+fi
+
+# Live 环境允许密码登录（仅体验用途，用户 lutra/lutra）
+sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication yes/' "$ROOTFS/etc/ssh/sshd_config" 2>/dev/null || true
+grep -q '^PasswordAuthentication yes' "$ROOTFS/etc/ssh/sshd_config" 2>/dev/null || \
+    echo 'PasswordAuthentication yes' >> "$ROOTFS/etc/ssh/sshd_config"
 if [ -f "$LUTRA_ROOT/installer/lutra-firstboot.sh" ]; then
     install -m 755 "$LUTRA_ROOT/installer/lutra-firstboot.sh" "$ROOTFS/opt/lutra/"
 fi
@@ -163,6 +182,9 @@ LIVE_KEYBOARD_LAYOUTS="us"
 EOF
 
 chroot "$ROOTFS" /bin/bash -c "update-initramfs -u -k all" 2>&1 | tail -n 3
+
+# 中文 locale（避免 GTK 回退到 C locale）
+chroot "$ROOTFS" /bin/bash -c "sed -i 's/^# *zh_CN.UTF-8/zh_CN.UTF-8/' /etc/locale.gen; locale-gen >/dev/null 2>&1 || true"
 
 # ---------- 4. squashfs ----------
 # 先卸载 chroot 的伪文件系统，否则 mksquashfs 会卡在 /proc、/sys

@@ -5,6 +5,7 @@
 XDG_SESSION_TYPE=wayland
 XDG_SESSION_DESKTOP=Lutra
 XDG_CURRENT_DESKTOP=Lutra
+LANG=zh_CN.UTF-8
 
 # 工具包后端：一律优先 Wayland
 GDK_BACKEND=wayland,x11

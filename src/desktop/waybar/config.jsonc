@@ -1,0 +1,55 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 30,
+  "spacing": 8,
+  "margin-top": 0,
+  "margin-left": 0,
+  "margin-right": 0,
+  "modules-left": ["wlr/workspaces"],
+  "modules-center": ["clock"],
+  "modules-right": ["custom/install", "pulseaudio", "network", "battery", "tray"],
+
+  "custom/install": {
+    "format": "安装",
+    "tooltip": false,
+    "on-click": "sudo -E /opt/lutra/lutra-installer-gui.py"
+  },
+
+  "wlr/workspaces": {
+    "format": "{name}",
+    "on-click": "activate",
+    "all-outputs": true
+  },
+
+  "clock": {
+    "format": "{:%H:%M}",
+    "tooltip-format": "{:%Y-%m-%d %A}",
+    "format-alt": "{:%Y-%m-%d %H:%M}"
+  },
+
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "静音",
+    "format-icons": ["", "", ""],
+    "on-click": "pavucontrol"
+  },
+
+  "network": {
+    "format-wifi": "WiFi {essid}",
+    "format-ethernet": "有线",
+    "format-disconnected": "离线",
+    "tooltip-format": "{ifname} {ipaddr}"
+  },
+
+  "battery": {
+    "format": "{icon} {capacity}%",
+    "format-icons": ["", "", "", "", ""],
+    "states": { "warning": 20, "critical": 10 }
+  },
+
+  "tray": {
+    "icon-size": 16,
+    "spacing": 6
+  }
+}

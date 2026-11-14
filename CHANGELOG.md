@@ -18,6 +18,8 @@
 ### 安装器
 
 - `installer/lutra-installer.py` 支持四种模式：整盘、与 Windows 共存、U 盘、手动分区
+- 新增 GTK4 图形向导 `installer/lutra-installer-gui.py`，复用同一套分区安全逻辑
+- Live 桌面提供 waybar 顶栏与「安装」入口，图形向导可直接选择磁盘、模式并安装
 - 写入前对目标磁盘分类（空盘 / 有数据 / 含系统），非空盘必须 `--force-nonempty` 并输入磁盘路径确认
 - 共存模式**只使用未分配空间**，绝不缩容现有分区
 - Btrfs 子卷 `@`、`@home`、`@snapshots`、`@var`，首启自动快照
