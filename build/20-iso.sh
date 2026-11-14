@@ -86,6 +86,9 @@ chroot "$ROOTFS" /bin/bash -c "
 " 2>&1 | tail -n 5
 
 log "安装 Lutra 内核"
+# 清掉历史内核，避免 ISO 误用没有光驱驱动的旧镜像
+rm -rf "$ROOTFS/lib/modules/6.12.0"
+rm -f "$ROOTFS/boot/vmlinuz-6.12.0" "$ROOTFS/boot/initrd.img-6.12.0"
 cp "$KERNEL_DEST"/linux-image-*.deb "$ROOTFS/tmp/"
 chroot "$ROOTFS" /bin/bash -c "dpkg -i /tmp/linux-image-*.deb || apt-get -f install -y"
 rm -f "$ROOTFS"/tmp/linux-image-*.deb
@@ -102,11 +105,14 @@ EOF
 
 # 默认用户
 chroot "$ROOTFS" /bin/bash -c "
-    id lutra >/dev/null 2>&1 || useradd -m -G sudo,audio,video,input,render,seat -s /bin/bash lutra
+    getent group seat >/dev/null || groupadd -r seat
+    id lutra >/dev/null 2>&1 || useradd -m -s /bin/bash -G sudo,audio,video,input,render,seat lutra
     echo 'lutra:lutra' | chpasswd
     echo 'lutra ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/90-lutra
     chmod 440 /etc/sudoers.d/90-lutra
 "
+mkdir -p "$ROOTFS/home/lutra"
+chown 1000:1000 "$ROOTFS/home/lutra" 2>/dev/null || true
 
 # 自动登录 tty1 并启动 labwc
 mkdir -p "$ROOTFS/etc/systemd/system/getty@tty1.service.d"
@@ -159,14 +165,21 @@ EOF
 chroot "$ROOTFS" /bin/bash -c "update-initramfs -u -k all" 2>&1 | tail -n 3
 
 # ---------- 4. squashfs ----------
+# 先卸载 chroot 的伪文件系统，否则 mksquashfs 会卡在 /proc、/sys
+log "卸载 chroot 挂载点"
+umount_chroot
+mkdir -p "$ROOTFS/dev" "$ROOTFS/proc" "$ROOTFS/sys" "$ROOTFS/run" "$ROOTFS/tmp"
+
 log "生成 squashfs"
 rm -rf "$ISODIR"
 mkdir -p "$ISODIR/live" "$ISODIR/boot/grub" "$ISODIR/LUTRA"
 mksquashfs "$ROOTFS" "$ISODIR/live/filesystem.squashfs" \
-    -comp zstd -Xcompression-level 15 -b 1M -noappend -e boot 2>&1 | tail -n 3
+    -comp zstd -Xcompression-level 9 -b 1M -noappend \
+    -e boot 2>&1 | tail -n 3
 
-KVER_IMG="$(ls "$ROOTFS"/boot/vmlinuz-* | head -1)"
-INITRD_IMG="$(ls "$ROOTFS"/boot/initrd.img-* | head -1)"
+KVER_IMG="$(ls -1 "$ROOTFS"/boot/vmlinuz-*lutra* 2>/dev/null | sort -V | tail -1)"
+INITRD_IMG="$(ls -1 "$ROOTFS"/boot/initrd.img-*lutra* 2>/dev/null | sort -V | tail -1)"
+[ -n "$KVER_IMG" ] && [ -n "$INITRD_IMG" ] || die "根文件系统里没有 Lutra 内核镜像"
 cp "$KVER_IMG" "$ISODIR/live/vmlinuz"
 cp "$INITRD_IMG" "$ISODIR/live/initrd.img"
 cp "$LUTRA_ROOT/installer/lutra-installer.py" "$ISODIR/LUTRA/"
@@ -174,22 +187,22 @@ cp "$LUTRA_ROOT/installer/lutra-installer.py" "$ISODIR/LUTRA/"
 # 安装器所需的压缩根文件系统（安装时直接解包，无需联网）
 log "生成安装用 rootfs.tzst"
 tar -C "$ROOTFS" --exclude='./proc/*' --exclude='./sys/*' --exclude='./dev/*' \
-    --exclude='./run/*' --exclude='./tmp/*' -cf - . | zstd -19 -T0 -o "$ISODIR/LUTRA/rootfs.tar.zst"
+    --exclude='./run/*' --exclude='./tmp/*' -cf - . | zstd -12 -T0 -o "$ISODIR/LUTRA/rootfs.tar.zst"
 
 cat > "$ISODIR/boot/grub/grub.cfg" <<EOF
 set default=0
 set timeout=8
 
 menuentry "Lutra ${VERSION} \"${CODENAME}\" (Live)" {
-    linux /live/vmlinuz boot=live components quiet splash
+    linux /live/vmlinuz boot=live components quiet splash console=tty0 console=ttyS0,115200
     initrd /live/initrd.img
 }
 menuentry "Lutra ${VERSION} (Live, safe graphics)" {
-    linux /live/vmlinuz boot=live components nomodeset
+    linux /live/vmlinuz boot=live components nomodeset console=tty0 console=ttyS0,115200
     initrd /live/initrd.img
 }
 menuentry "Lutra ${VERSION} (Install)" {
-    linux /live/vmlinuz boot=live components quiet
+    linux /live/vmlinuz boot=live components quiet console=tty0 console=ttyS0,115200
     initrd /live/initrd.img
 }
 menuentry "从本地磁盘启动" {

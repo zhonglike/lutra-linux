@@ -13,6 +13,7 @@
 - `build/10-kernel.sh` 支持 amd64 / arm64 / i686，产出 `bindeb-pkg` deb
 - 构建环境完全落在 M 盘：便携 QEMU + Debian trixie cloud image + cloud-init 种子盘
 - `build/20-iso.sh` 生成 Live ISO：debootstrap 根文件系统、squashfs、live-boot、GRUB 双引导
+- Live ISO 已在 QEMU 内实测：启动到登录、`uname -r` 为 `6.12.0-lutra`、安装器可运行
 
 ### 安装器
 

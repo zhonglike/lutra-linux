@@ -120,8 +120,11 @@ def scan_disks() -> list[Disk]:
               capture=True)
     data = json.loads(raw or "{}")
     disks: list[Disk] = []
+    skip_prefix = ("/dev/zram", "/dev/loop", "/dev/sr", "/dev/ram", "/dev/dm-")
     for d in data.get("blockdevices", []):
         if d.get("type") != "disk":
+            continue
+        if d["path"].startswith(skip_prefix):
             continue
         disk = Disk(
             path=d["path"], size=int(d["size"]), model=(d.get("model") or "").strip(),
